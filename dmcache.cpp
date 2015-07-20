@@ -9,33 +9,41 @@ int main(int argc, char *argv[]){
 	int i, j;
 	/*********initialize memory block/cache line********/
 	unsigned int cacheDirty[32];
-	unsigned int cacheTag[32];
-	string cacheData[256];
-	string ram[0XFFFF];	
-
+	unsigned int cacheTag[32]; //Each cacheline has one tag
+	string cacheData[32][8];//stores our Data, 32 rows, 8 columns because 8 bytes for each cacheline
 	      //cache[32][0]; stores the tag and cache[32][1] stores if dirty bit or not
 	string memory[0xFFFF]; 	//stores data, it is indexed by the offset we recieve from cacheline
 
 
 
 	for (i = 0; i < 32; i++){
-		for (j = 0; j < 2; j++){
-			cache[i][j] = 0;
-		}
+
+			cacheDirty[i] = 0;
+			cacheTag[i] = 0;
 	}
 
-	for(i = 0; i < 0xFFFF ; i++ )
-	{
-		cout << i << endl;
-	}
-	/**********get data from test file/ convert the cachewwwwwwwwwwwwwwwwwwwww line************/
+
+	for (i = 0; i < 32; i++){
+		for (j = 0; j < 8; j++){
+			cacheData[i] = "";
+		}
+
+	}//initialize all data
+
 	ifstream fs;
 	fs.open(argv[1]);
-	int offset, index, tag;
-	int cacheLine, ops;
+	unsigned int offset, index, tag, outputDirty = 0, outputHit = 0;
 	string data;
-	int hit = 0; //if 1 then hits, if 0 then miss
-	int dirty = 0;
+	int cacheLine, ops;
+	string outputData;
+
+
+
+	/**********get data from test file/ convert the cachewwwwwwwwwwwwwwwwwwwww line************/
+	
+	
+	
+	
 	
 
 
