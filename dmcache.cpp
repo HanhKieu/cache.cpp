@@ -8,8 +8,15 @@ using namespace std;
 int main(int argc, char *argv[]){
 	int i, j;
 	/*********initialize memory block/cache line********/
-	int cache[32][2];      //cache[32][0]; stores the tag and cache[32][1] stores if dirty bit or not
-	string memory[8]; 	//stores data, it is indexed by the offset we recieve from cacheline
+	unsigned int cacheDirty[32];
+	unsigned int cacheTag[32];
+	string cacheData[256];
+	string ram[0XFFFF];	
+
+	      //cache[32][0]; stores the tag and cache[32][1] stores if dirty bit or not
+	string memory[0xFFFF]; 	//stores data, it is indexed by the offset we recieve from cacheline
+
+
 
 	for (i = 0; i < 32; i++){
 		for (j = 0; j < 2; j++){
@@ -17,7 +24,11 @@ int main(int argc, char *argv[]){
 		}
 	}
 
-	/**********get data from test file/ convert the cache line************/
+	for(i = 0; i < 0xFFFF ; i++ )
+	{
+		cout << i << endl;
+	}
+	/**********get data from test file/ convert the cachewwwwwwwwwwwwwwwwwwwww line************/
 	ifstream fs;
 	fs.open(argv[1]);
 	int offset, index, tag;
@@ -25,6 +36,8 @@ int main(int argc, char *argv[]){
 	string data;
 	int hit = 0; //if 1 then hits, if 0 then miss
 	int dirty = 0;
+	
+
 
 	while (fs >> hex >> cacheLine >> ops >> data){
 
@@ -37,7 +50,7 @@ int main(int argc, char *argv[]){
 		{
 				cache[index][0] = tag;
 				cache[index][1] = 1; //set it dirty
-				memory[offset] = data;		
+					
 		}
 		else if(ops == 0)
 		{
@@ -48,24 +61,37 @@ int main(int argc, char *argv[]){
 			if(cache[index][0] == tag && cache[index][1] == 1){
 					hit = 1;
 					dirty = 1;
+					
+				
+
+					
+
+
 
 			}//if hit and dirty, then stay dirty
 			else if((cache[index][0] == tag) && (cache[index][1] == 0)){
 					hit = 1;
 					dirty = 0;
-					
+			
+
 			}//if hit and clean
 			else if(cache[index][0] != tag && cache[index][1] == 1){
 					hit = 0;
 					dirty = 1;
-					cache[index][1] = 1; //clean or dirty
+					cache[index][1] = 0 ; //clean or dirty
 					cache[index][0] = tag;
+
+					
+
+
+				
 			}// if miss and dirty
 			else if(cache[index][0] != tag && cache[index][1] == 0){
 					hit = 0;
 					dirty = 0;
 					cache[index][1] = 1;
 					cache[index][0] = tag;
+				
 			}//if miss and clean
 	
 
