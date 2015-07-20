@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 					{
 						for(int i = 0; i < 8; i++)
 						{
-							 memory[index][i] =  cacheData[index][i] ;
+							 memory[ (cacheTag[index] << 3 | index )][i] =  cacheData[index][i] ;
 
 						}//if miss and dirty, transfer cache to memory. Remember to transfer all 8 bytes
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 					for(int i = 0; i < 8; i++)
 					{
 							   
-						cacheData[index][i] = memory[index][i]; 
+						cacheData[index][i] = memory[(cacheTag[index] << 3 | index )][i]; 
 
 					}//if miss and clean, transfer memory to cache, bc cache doesn't contain recent updates
 
@@ -85,6 +85,7 @@ int main(int argc, char *argv[]){
 		else if(ops == 0)
 		{
 			/*************cache-read-in**************/
+			dirty = cacheDirty[index];
 
 			if(cacheTag[index] == tag)
 			{
@@ -94,10 +95,38 @@ int main(int argc, char *argv[]){
 
 
 			}//if hits
+			else
+			{
+				outputHit = 0;
+				outputDirty = cacheDirty[index];
+
+				if(dirty)
+				{
+					for(int i = 0; i < 8; i++)
+					{
+						 memory[(cacheTag[index] << 3 | index )][i] =  cacheData[index][i] ;
+
+					}//if miss and dirty, transfer cache to memory. Remember to transfer all 8 bytes
+
+				}// if dirty
+
+				cacheTag[index] = tag;
+				for(int i = 0; i < 8; i++)
+				{
+						   
+					cacheData[index][i] = memory[(cacheTag[index] << 3 | index )][i]; 
+
+				}//if miss and clean, transfer memory to cache, bc cache doesn't contain recent updates
+
+				cacheDirty[index] = 0;
+				outputData = cacheData[index][offset];
+
+
+			}//if it misses
 			
 
 
-		std::cout << " banana " << std::endl;
+		std::cout << outputData << " " <<  outputHit << " " << outputDirty << std::endl;
 		}
 
 	}
