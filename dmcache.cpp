@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 					{
 						for(int i = 0; i < 8; i++)
 						{
-							 memory[ (cacheTag[index] << 3 | index )][i] =  cacheData[index][i] ;
+							 memory[ (cacheTag[index] << 5 | index )][i] =  cacheData[index][i] ;
 
 						}//if miss and dirty, transfer cache to memory. Remember to transfer all 8 bytes
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 					for(int i = 0; i < 8; i++)
 					{
 							   
-						cacheData[index][i] = memory[(cacheTag[index] << 3 | index )][i]; 
+						cacheData[index][i] = memory[(cacheTag[index] << 5 | index )][i]; 
 
 					}//if miss and clean, transfer memory to cache, bc cache doesn't contain recent updates
 
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 				{
 					for(int i = 0; i < 8; i++)
 					{
-						 memory[(cacheTag[index] << 3 | index )][i] =  cacheData[index][i] ;
+						 memory[(cacheTag[index] << 5 | index )][i] =  cacheData[index][i] ;
 
 					}//if miss and dirty, transfer cache to memory. Remember to transfer all 8 bytes
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]){
 				for(int i = 0; i < 8; i++)
 				{
 						   
-					cacheData[index][i] = memory[(cacheTag[index] << 3 | index )][i]; 
+					cacheData[index][i] = memory[(cacheTag[index] << 5| index )][i]; 
 
 				}//if miss and clean, transfer memory to cache, bc cache doesn't contain recent updates
 
