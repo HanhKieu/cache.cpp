@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-		std::cout << "banana" << std::endl;
+		//std::cout << "banana" << std::endl;
 
 	int i, j, z;
 	//10 sets 6 lines each.
@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
 	fs.open(argv[1]);
 	//of.open("dm-out.txt");
 	unsigned int offset, set, tag, dirty = 0;
-	//unsigned int outputDirty;
-	unsigned int tempHit = 0, tempDirty = 0,outputHit = 0;
+	unsigned int outputDirty;
+	unsigned int tempHit = 0,outputHit = 0;
 	std::string data;
 	int cacheLine, ops;
 	std::string outputData = "";
@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 	while (fs >> std::hex >> cacheLine >> ops >> data)
 	{
 
+		tempHit = 0;
 
 		offset = cacheLine & 0x3; //keep first two values
 		set = (cacheLine & 0x3C) >> 2;
@@ -81,8 +82,6 @@ int main(int argc, char *argv[])
 		
 		if(ops == 255)
 		{
-
-			
 			for(int i = 0; i < 6; i++)
 			{
 				dirty = cacheDirty[set][i]; //check to see if dirty
@@ -98,66 +97,163 @@ int main(int argc, char *argv[])
 					LRUcounter[set][i] = 0;// then set original counter to 0
 					cacheDirty[set][i] = 1;
 					tempHit = 1;
+					break;
 				}//if hit
+			cacheDirty[set][i] = 1; //set to dirty		
+		
 
-			cacheDirty[set][i] = 1; //set to dirty	
-				
-		   }//for each line in set
-
-
-			if(tempHit == 0 )
+		if(tempHit == 0 )
+		{
+			if(dirty)
 			{
-
-
-				if(dirty)
+				for(int i = 0; i < 6; i++)
 				{
-					for(int i = 0; i < 6; i++)
+					for(int j = 0; j < 4; j++)
 					{
+						memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
+						//std::cout << cacheData[set][i][j] << std::endl;
+					}
+					memoryTag[cacheTag[set][i] << 4  | set][i] = cacheTag[set][i];
+				}//if miss	
+
+			}// if miss and dirty transfer all from cacheData to memory, then transfer cacheTag to memorytag
+			else
+			{
+				for(int i = 0; i < 6; i++)
+				{
+					if(LRUcounter[set][i] == 5)
+					{	
+						cacheTag[set][i] = tag; //put testFile tag into cacheTag
+
 						for(int j = 0; j < 4; j++)
 						{
-							memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
-							//std::cout << cacheData[set][i][j] << std::endl;
-						}
-						memoryTag[cacheTag[set][i] << 4  | set][i] = cacheTag[set][i];
-					}//if miss
+							cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
 
-					
+						}//bring all memory to cache on that line
 
-				}// if miss and dirty transfer all from cacheData to memory, then transfer cacheTag to memorytag
+						cacheData[set][i][offset] = data; //put data into LRU cacheData
 
+						for(int y = 0; y < 6; y++)
+							LRUcounter[set][y]++;
+						//increment everything by one, then set original counter to 0;
+						LRUcounter[set][i] = 0;
+						break;
 
-				else
-				{
-			
-					for(int i = 0; i < 6; i++)
-					{
-						if(LRUcounter[set][i] == 5)
-						{	
-
-							cacheTag[set][i] = tag; //put testFile tag into cacheTag
-
-							for(int j = 0; j < 4; j++)
-							{
-								cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
-
-							}//bring all memory to cache on that line
-
-							cacheData[set][i][offset] = data; //put data into LRU cacheData
-
-							for(int y = 0; y < 6; y++)
-								LRUcounter[set][y]++;
-							//increment everything by one, then set original counter to 0;
-							LRUcounter[set][i] = 0;
-
-						}
-					}//find the LRU cacheline and replace that data for that line
+					}
+				}//find the LRU cacheline and replace that data for that line
 
 
-			    }//else if it misses and clean , find the least recently used cacheline, and transfer from memory to that LRU cacheline, 
+		    }//else if it misses and clean , find the least recently used cacheline, and transfer from memory to that LRU cacheline, 
 
 
-			}//if misses 
+		}//if misses 
 	}//if write
+
+
+	   }//for each line in set
+
+	// else if(ops == 0)
+	// {
+
+
+	// 	for(int i = 0; i < 6; i++)
+	// 	{
+	// 		dirty = cacheDirty[set][i]; //check to see if dirty
+
+	// 		if(cacheTag[set][i] == tag)
+	// 		{	 //place the data in same tag in the cache no matter what.
+				
+	// 			outputHit = 1;
+	// 			outputDirty = cacheDirty[set][i];
+	// 			outputData = cacheData[set][i][offset];
+	// 			//std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
+	// 			tempHit = 1;
+	// 			break;
+	// 		}//if hit
+
+
+	// 	if(tempHit == 0)
+	// 	{	
+
+
+	// 		outputHit = 0;
+	// 		if(dirty)
+	// 		{	
+
+	// 			for(int i = 0; i < 6; i++)
+	// 			{
+	// 				for(int j = 0; j < 4; j++)
+	// 				{
+	// 					memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
+	// 					//std::cout << cacheData[set][i][j] << std::endl;
+	// 				}
+	// 				memoryTag[cacheTag[set][i] << 4  | set][i] = cacheTag[set][i];
+	// 			}//if miss and dirty transfer from cache to memory
+	// 			//std::cout << outputData << " " << outputHit << " " << outputDirty << " H" << std::endl;
+	// 		}
+	// 		else
+	// 		{
+
+	// 			outputHit = 0;
+
+	// 			for(int i = 0; i < 6; i++)
+	// 			{
+	// 				if(LRUcounter[set][i] == 5)
+	// 				{	
+	// 					outputData = cacheData[set][i][offset];
+	// 					cacheTag[set][i] = tag; //put testFile tag into cacheTag
+
+	// 					for(int j = 0; j < 4; j++)
+	// 					{
+	// 						cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
+
+	// 					}//bring all memory to cache on that line
+
+	// 					cacheData[set][i][offset] = data; //put data into LRU cacheData
+
+	// 					for(int y = 0; y < 6; y++)
+	// 						LRUcounter[set][y]++;
+	// 					//increment everything by one, then set original counter to 0;
+	// 					LRUcounter[set][i] = 0;
+
+	// 					outputDirty = cacheDirty[set][i];
+	// 					cacheDirty[set][i] = 0;
+	// 					break;
+
+	// 				}
+					
+	// 			}//find the LRU cacheline and replace that data for that line
+
+
+	// 			//std::cout << outputData << " " << outputHit << " " << outputDirty << " M" << std::endl;
+
+	// 		}//if miss and clean trasnfer from memory to cache keeping in mind LRU
+
+	// 	}// if miss
+
+ // }//for each line in set
+ 
+	// 		std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
+
+			
+	  
+	// }//if read
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }//while
 
