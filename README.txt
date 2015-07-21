@@ -1,5 +1,5 @@
 Things that work:
--Everything up to going into the if statement works so far, in terms of me testing the program. Ready to do further tests..
+-Everything up to going into the first ELSE statement works so far, in terms of me testing the program. Ready to do further tests..
 
 
 

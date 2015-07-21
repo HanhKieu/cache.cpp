@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	//of.open("dm-out.txt");
 	unsigned int offset, set, tag, dirty = 0;
 	//unsigned int outputDirty;
-	//ckunsigned int tempHit = 0, tempDirty = 0,outputHit = 0;
+	unsigned int tempHit = 0, tempDirty = 0,outputHit = 0;
 	std::string data;
 	int cacheLine, ops;
 	std::string outputData = "";
@@ -83,69 +83,69 @@ int main(int argc, char *argv[])
 		{
 
 			
-		// 	for(int i = 0; i < 6; i++)
-		// 	{
+			for(int i = 0; i < 6; i++)
+			{
 
-		// 		dirty = cacheDirty[set][i]; //check to see if dirty
+				dirty = cacheDirty[set][i]; //check to see if dirty
 
-		// 		if(cacheTag[set][i] == tag)
-		// 		{
-		// 			cacheData[set][i][offset] = data; //place the data in the cache no matter what.
+				if(cacheTag[set][i] == tag)
+				{
+					cacheData[set][i][offset] = data; //place the data in the cache no matter what.
 
-		// 			for( int j = 0; j < 6; j++)===
-		// 			{
-		// 				if(LRUcounter[set][j] < LRUcounter[set][i] )
-		// 					LRUcounter[set][j]++;
+					for( int j = 0; j < 6; j++)
+					{
+						if(LRUcounter[set][j] < LRUcounter[set][i] )
+							LRUcounter[set][j]++;
 
-		// 			}//find all less than original counter , increment by 1
-		// 			LRUcounter[set][i] = 0;// then set original counter to 0
-		// 			cacheDirty[set][i] = 1;
+					}//find all less than original counter , increment by 1
+					LRUcounter[set][i] = 0;// then set original counter to 0
+					cacheDirty[set][i] = 1;
 
-		// 		}//if hit
+				}//if hit
 
-		// 		else
-		// 		{
-		// 			if(dirty)
-		// 			{
-		// 				for(int j = 0; j < 4; j++)
-		// 				{
-		// 					 memory[cacheTag[set][i] << 4 | set ][i][j] =  cacheData[set][i][j] ;
+			// 	else
+			// 	{
+			// 		if(dirty)
+			// 		{
+			// 			for(int j = 0; j < 4; j++)
+			// 			{
+			// 				 memory[cacheTag[set][i] << 4 | set ][i][j] =  cacheData[set][i][j] ;
 
-		// 				}//if miss
-		// 				memoryTag[cacheTag[set][i] << 4 | set][i] = cacheTag[set][i];
+			// 			}//if miss
+			// 			memoryTag[cacheTag[set][i] << 4 | set][i] = cacheTag[set][i];
 
 
-		// 			}// if miss and dirty transfer all from cacheData to memory, then transfer cacheTag to memorytag
-		// 			else
-		// 			{
+			// 		}// if miss and dirty transfer all from cacheData to memory, then transfer cacheTag to memorytag
+			// 		else
+			// 		{
 				
-		// 				for(z = 0; z < 6; z++)
-		// 				{
-		// 					if(LRUcounter[set][z] == 5)
-		// 					{	
-		// 						for(int y = 0; y < 6; y++)
-		// 							LRUcounter[set][y]++;
-		// 						//increment everything by one, then set original counter to 0;
-		// 						LRUcounter[set][z] = 0;
-		// 						for(int j = 0; j < 4; j++)
-		// 						{
-		// 							cacheData[set][z][j] = memory[cacheTag[set][i] << 4 | set][z][j];
-		// 						}//for each byte in this cacheline, replace it with the one from memory
-		// 					}
-		// 				}//find the LRU cacheline and replace that data for that line
+			// 			for(z = 0; z < 6; z++)
+			// 			{
+			// 				if(LRUcounter[set][z] == 5)
+			// 				{	
+			// 					for(int y = 0; y < 6; y++)
+			// 						LRUcounter[set][y]++;
+			// 					//increment everything by one, then set original counter to 0;
+			// 					LRUcounter[set][z] = 0;
+			// 					for(int j = 0; j < 4; j++)
+			// 					{
+			// 						cacheData[set][z][j] = memory[cacheTag[set][i] << 4 | set][z][j];
+			// 					}//for each byte in this cacheline, replace it with the one from memory
+			// 				}
+			// 			}//find the LRU cacheline and replace that data for that line
 
 
-		// 		    }//else if it misses and clean , find the least recently used cacheline, and transfer from memory to that LRU cacheline, 
-
-
-
-		// 	}//if hits, put the data where it belongs in cacheline
+			// 	    }//else if it misses and clean , find the least recently used cacheline, and transfer from memory to that LRU cacheline, 
 
 
 
-		// 	cacheDirty[set][i] = 1; //set to dirty	
+			// }//if hits, put the data where it belongs in cacheline
+
+
+
+			cacheDirty[set][i] = 1; //set to dirty	
 				
-		// }//for each line in set
+		}//for each line in set
 
 
 	}//if write
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 }//while
 
 	
-// 	fs.close();
+ 	fs.close();
 
 	/************return cache file***************/
 	return 0;
