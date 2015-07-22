@@ -115,6 +115,9 @@ int main(int argc, char *argv[])
 							}
 							memoryTag[cacheTag[set][line] << 4  | set][line] = cacheTag[set][line];
 
+					// cacheData[set][i][offset] = data; //put data into LRU cacheData
+					// 			cacheTag[set][i] = tag; //put testFile tag into cacheTag
+
 					}// if miss and dirty transfer all from cacheData to memory, then transfer cacheTag to memorytag
 					else
 					{
