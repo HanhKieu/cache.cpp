@@ -61,9 +61,9 @@ int main(int argc, char *argv[])
 	}//initialize all data
 
 	std::ifstream fs;
-	//std::ofstream of;
+	std::ofstream of;
 	fs.open(argv[1]);
-	//of.open("dm-out.txt");
+	of.open("sa-out.txt");
 	unsigned int offset, set, tag, dirty = 0;
 	unsigned int outputDirty;
 	unsigned int tempHit = 0,outputHit = 0;
@@ -160,12 +160,13 @@ int main(int argc, char *argv[])
 						LRUcounter[set][i]++;
 				}
 				LRUcounter[set][hitPos] = 0;
-				std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
+				//std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		    }//hit. If there is a hit , transfer data and tag to where it hit
 		    if(tempHit == 0){
 		    	for(int i = 0; i < lineSize; i++){
 			    	dirty = cacheDirty[set][i];
-
+			    	outputDirty = dirty;
+			    	outputData = cacheData[set][line][offset];
 			    	if(dirty){
 			    		for(int j = 0; j < 4; j++)
 							memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
@@ -197,8 +198,8 @@ int main(int argc, char *argv[])
 
 		    	}
 
-		    	outputData = cacheData[set][LRUindex][offset];
-		    	outputDirty = cacheDirty[set][LRUindex];
+		    	//outputData = cacheData[set][LRUindex][offset];
+		    	//outputDirty = cacheDirty[set][LRUindex];
 		    	outputHit = tempHit;
 		    	cacheTag[set][LRUindex] = tag;
 				cacheData[set][LRUindex][offset] = data;
@@ -209,13 +210,13 @@ int main(int argc, char *argv[])
 
 
 		    
-
+				
  
 
 		    }
 
-		  std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
-		    
+		  //std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
+		    of << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		}//if read
 
 
@@ -224,6 +225,7 @@ int main(int argc, char *argv[])
 
 	
  	fs.close();
+ 	of.close();
 
 	return 0;
 }
