@@ -105,7 +105,10 @@ int main(int argc, char *argv[])
 				cacheData[set][hitPos][offset] = data;
 				cacheDirty[set][hitPos] = 1;
 				for(int i = 0; i < lineSize; i++)
-					LRUcounter[set][i]++;
+				{
+					if(LRUcounter[set][i] < LRUcounter[set][hitPos])
+						LRUcounter[set][i]++;
+				}
 				LRUcounter[set][hitPos] = 0;
 		    }//hit. If there is a hit , transfer data and tag to where it hit
 		    if(tempHit == 0){
@@ -122,6 +125,7 @@ int main(int argc, char *argv[])
 			    		for(int j = 0; j < 4; j++)
 							cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
 						cacheTag[set][i] = memoryTag[set][i];
+						cacheDirty[set][i] = 1;
 			    	}//if clean write from memory to cache
 
 		    	}//for every line in set
@@ -131,6 +135,7 @@ int main(int argc, char *argv[])
 		    	for(int i = 0;i < lineSize; i++){
 		    		if(LRUcounter[set][i] == 5){
 		    			LRUindex = i;
+		    			break;
 		    		}
 
 		    	}
@@ -149,6 +154,12 @@ int main(int argc, char *argv[])
 				outputData = cacheData[set][hitPos][offset];
 				outputDirty = cacheDirty[set][hitPos];
 				outputHit = tempHit;
+				for(int i = 0; i < lineSize; i++)
+				{
+					if(LRUcounter[set][i] < LRUcounter[set][hitPos])
+						LRUcounter[set][i]++;
+				}
+				LRUcounter[set][hitPos] = 0;
 				std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		    }//hit. If there is a hit , transfer data and tag to where it hit
 		    if(tempHit == 0){
@@ -159,29 +170,53 @@ int main(int argc, char *argv[])
 			    		for(int j = 0; j < 4; j++)
 							memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
 						memoryTag[set][i] = cacheTag[set][i];
-						outputDirty = cacheDirty[set][i];
+						cacheDirty[set][i] = 0;
+						
+
+
 						
 			    	}//if its dirty transfer data from cache to memory. Then write data to that offset and set. Then Initialiate LRU counter 
 			    	else{
 			    		for(int j = 0; j < 4; j++)
 							cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
 						cacheTag[set][i] = memoryTag[set][i];
-						outputDirty = cacheDirty[set][i];
-						cacheDirty[set][i] = 1;
+						cacheDirty[set][i] = 0;
 
 			    	}//if clean write from memory to cache
 		    	}//for every line in set
 
 
-		    	std::cout << "banana" << std::endl;
-		    	
+
+
+
+		    	for(int i = 0;i < lineSize; i++){
+		    		if(LRUcounter[set][i] == 5){
+		    			LRUindex = i;
+		    			break;
+		    		}
+
+		    	}
+
+		    	outputData = cacheData[set][LRUindex][offset];
+		    	outputDirty = cacheDirty[set][LRUindex];
+		    	outputHit = tempHit;
+		    	cacheTag[set][LRUindex] = tag;
+				cacheData[set][LRUindex][offset] = data;
+				for(int y = 0; y < 6; y++)
+					LRUcounter[set][y]++;
+				cacheDirty[set][LRUindex] = 1;
+				LRUcounter[set][LRUindex] = 0;
+
+
+		    
+
  
 
 		    }
 
-
+		  std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		    
-		}
+		}//if read
 
 
 

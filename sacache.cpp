@@ -194,8 +194,10 @@ int main(int argc, char *argv[])
 							memory[cacheTag[set][line] << 4  | set ][i][j] = cacheData[set][line][j];
 							//std::cout << cacheData[set][i][j] << std::endl;
 						}
-						cacheTag[set][line] = tag;
 						memoryTag[cacheTag[set][line] << 4  | set][line] = cacheTag[set][line];
+						// cacheTag[set][i] = tag;
+						// cacheData[set][i][offset] = data;
+						
 					//if miss and dirty transfer from cache to memory
 					//std::cout << outputData << " " << outputHit << " " << outputDirty << " H" << std::endl;
 				}
@@ -239,7 +241,7 @@ int main(int argc, char *argv[])
 
 	    }//for each line in set
 
-			//std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
+			///std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
 
 			
 	  
