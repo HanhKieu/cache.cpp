@@ -95,10 +95,10 @@ int main(int argc, char *argv[])
 
 					for( int j = 0; j < 6; j++)
 					{
-						if(LRUcounter[set][j] < LRUcounter[set][i] )
+						if(LRUcounter[set][j] < LRUcounter[set][line] )
 							LRUcounter[set][j]++;
 					}//find all less than original counter , increment by 1
-					LRUcounter[set][i] = 0;// then set original counter to 0
+					LRUcounter[set][line] = 0;// then set original counter to 0
 					tempHit = 1;
 				}//if hit
 				
@@ -122,15 +122,16 @@ int main(int argc, char *argv[])
 						{
 							if(LRUcounter[set][i] == 5)
 							{	
-								cacheTag[set][i] = tag; //put testFile tag into cacheTag
+								
 
 								for(int j = 0; j < 4; j++)
 								{
-									cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
+									cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set << 2][i][j];
 
 								}//bring all memory to cache on that line
 
 								cacheData[set][i][offset] = data; //put data into LRU cacheData
+								cacheTag[set][i] = tag; //put testFile tag into cacheTag
 
 								for(int y = 0; y < 6; y++)
 									LRUcounter[set][y]++;
@@ -147,99 +148,98 @@ int main(int argc, char *argv[])
 
 				}//if misses 
 
-				cacheDirty[set][i] = 1; //set to dirty	
+				cacheDirty[set][line] = 1; //set to dirty	
 		}//for each line in set
 	}//if write
 
 
 	   
 
-	// else if(ops == 0)
-	// {
+	else if(ops == 0)
+	{
 
+		outputHit = 0;
+		outputDirty = 0;
+		outputData = "";
 
-	// 	for(int i = 0; i < 6; i++)
-	// 	{
-	// 		dirty = cacheDirty[set][i]; //check to see if dirty
+		for(int line= 0; line < 6; line++)
+		{
+			dirty = cacheDirty[set][line]; //check to see if dirty
 
-	// 		if(cacheTag[set][i] == tag)
-	// 		{	 //place the data in same tag in the cache no matter what.
+			if(cacheTag[set][line] == tag)
+			{	 //place the data in same tag in the cache no matter what.
 				
-	// 			outputHit = 1;
-	// 			outputDirty = cacheDirty[set][i];
-	// 			outputData = cacheData[set][i][offset];
-	// 			//std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
-	// 			tempHit = 1;
-	// 			break;
-	// 		}//if hit
+				outputHit = 1;
+				outputDirty = cacheDirty[set][line];
+				outputData = cacheData[set][line][offset];
+
+				//std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
+				tempHit = 1;
+				
+			}//if hit
 
 
-	// 	if(tempHit == 0)
-	// 	{	
+			if(tempHit == 0)
+			{	
+
+				outputHit = 0;//the outputHit will be 0, if its dirty or not
+				if(dirty)
+				{	
+						for(int j = 0; j < 4; j++)
+						{
+							memory[cacheTag[set][line] << 4  | set ][i][j] = cacheData[set][line][j];
+							//std::cout << cacheData[set][i][j] << std::endl;
+						}
+						cacheTag[set][line] = tag;
+						memoryTag[cacheTag[set][line] << 4  | set][line] = cacheTag[set][line];
+					//if miss and dirty transfer from cache to memory
+					//std::cout << outputData << " " << outputHit << " " << outputDirty << " H" << std::endl;
+				}
+				else
+				{
+
+					for(int i = 0; i < 6; i++)
+					{
+						if(LRUcounter[set][i] == 5)
+						{	
+							
+							cacheTag[set][i] = tag; //put testFile tag into cacheTag
+
+							for(int j = 0; j < 4; j++)
+							{
+								cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
+
+							}//bring all memory to cache on that line
+
+							outputData = cacheData[set][i][offset];
+
+							for(int y = 0; y < 6; y++)
+								LRUcounter[set][y]++;
+							//increment everything by one, then set original counter to 0;
+							LRUcounter[set][i] = 0;
+
+							outputDirty = cacheDirty[set][i];
+							cacheDirty[set][i] = 0;
+							break;
+
+						}
+						
+					}//find the LRU cacheline and replace that data for that line
 
 
-	// 		outputHit = 0;
-	// 		if(dirty)
-	// 		{	
+					//std::cout << outputData << " " << outputHit << " " << outputDirty << " M" << std::endl;
 
-	// 			for(int i = 0; i < 6; i++)
-	// 			{
-	// 				for(int j = 0; j < 4; j++)
-	// 				{
-	// 					memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
-	// 					//std::cout << cacheData[set][i][j] << std::endl;
-	// 				}
-	// 				memoryTag[cacheTag[set][i] << 4  | set][i] = cacheTag[set][i];
-	// 			}//if miss and dirty transfer from cache to memory
-	// 			//std::cout << outputData << " " << outputHit << " " << outputDirty << " H" << std::endl;
-	// 		}
-	// 		else
-	// 		{
+			}//if miss and clean trasnfer from memory to cache keeping in mind LRU
 
-	// 			outputHit = 0;
+			}// if miss
 
-	// 			for(int i = 0; i < 6; i++)
-	// 			{
-	// 				if(LRUcounter[set][i] == 5)
-	// 				{	
-	// 					outputData = cacheData[set][i][offset];
-	// 					cacheTag[set][i] = tag; //put testFile tag into cacheTag
+	    }//for each line in set
 
-	// 					for(int j = 0; j < 4; j++)
-	// 					{
-	// 						cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
-
-	// 					}//bring all memory to cache on that line
-
-	// 					cacheData[set][i][offset] = data; //put data into LRU cacheData
-
-	// 					for(int y = 0; y < 6; y++)
-	// 						LRUcounter[set][y]++;
-	// 					//increment everything by one, then set original counter to 0;
-	// 					LRUcounter[set][i] = 0;
-
-	// 					outputDirty = cacheDirty[set][i];
-	// 					cacheDirty[set][i] = 0;
-	// 					break;
-
-	// 				}
-					
-	// 			}//find the LRU cacheline and replace that data for that line
-
-
-	// 			//std::cout << outputData << " " << outputHit << " " << outputDirty << " M" << std::endl;
-
-	// 		}//if miss and clean trasnfer from memory to cache keeping in mind LRU
-
-	// 	}// if miss
-
- // }//for each line in set
-
-	// 		std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
+			std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
 
 			
 	  
-	// }//if read
+	}//if read
 
 
 

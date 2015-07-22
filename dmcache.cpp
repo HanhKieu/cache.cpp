@@ -92,6 +92,7 @@ int main(int argc, char *argv[]){
 				outputHit = 1;
 				outputDirty = cacheDirty[index];
 				outputData = cacheData[index][offset];
+				
 
 
 			}//if hits
