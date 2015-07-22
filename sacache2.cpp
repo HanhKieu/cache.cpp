@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
 		if(ops == 255){
 			if(tempHit == 1 ){
 				cacheData[set][hitPos][offset] = data;
+				cacheDirty[set][hitPos] = 1;
 				for(int i = 0; i < lineSize; i++)
 					LRUcounter[set][i]++;
 				LRUcounter[set][hitPos] = 0;
@@ -135,21 +136,46 @@ int main(int argc, char *argv[])
 		    	}
 		    	cacheTag[set][LRUindex] = tag;
 				cacheData[set][LRUindex][offset] = data;
+				cacheDirty[set][LRUindex] = 1;
 				for(int y = 0; y < 6; y++)
 					LRUcounter[set][y]++;
 				LRUcounter[set][LRUindex] = 0;
 		    }//if it misses something is wrong, and all lines that are dirty neeeds to be updated
 		}
 
-		else
+		if(ops == 0)
 		{
 			if(tempHit == 1 ){
 				outputData = cacheData[set][hitPos][offset];
 				outputDirty = cacheDirty[set][hitPos];
+				std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		    }//hit. If there is a hit , transfer data and tag to where it hit
+		    if(tempHit == 0){
+		    	for(int i = 0; i < lineSize; i++){
+			    	dirty = cacheDirty[set][i];
+
+			    	if(dirty){
+			    		for(int j = 0; j < 4; j++)
+							memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
+						memoryTag[set][i] = cacheTag[set][i];
+						
+			    	}//if its dirty transfer data from cache to memory. Then write data to that offset and set. Then Initialiate LRU counter 
+			    	else{
+			    		for(int j = 0; j < 4; j++)
+							cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
+						cacheTag[set][i] = memoryTag[set][i];
+			    	}//if clean write from memory to cache
+		    	}//for every line in set
 
 
-		    std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
+
+		    	
+ 
+
+		    }
+
+
+		    
 		}
 
 
