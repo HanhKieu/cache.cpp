@@ -185,6 +185,7 @@ int main(int argc, char *argv[])
 				outputHit = 0;//the outputHit will be 0, if its dirty or not
 				if(dirty)
 				{	
+
 						for(int j = 0; j < 4; j++)
 						{
 							memory[cacheTag[set][line] << 4  | set ][i][j] = cacheData[set][line][j];
