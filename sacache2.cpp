@@ -133,13 +133,23 @@ int main(int argc, char *argv[])
 		    		}
 
 		    	}
-
 		    	cacheTag[set][LRUindex] = tag;
 				cacheData[set][LRUindex][offset] = data;
 				for(int y = 0; y < 6; y++)
 					LRUcounter[set][y]++;
 				LRUcounter[set][LRUindex] = 0;
 		    }//if it misses something is wrong, and all lines that are dirty neeeds to be updated
+		}
+
+		else
+		{
+			if(tempHit == 1 ){
+				outputData = cacheData[set][hitPos][offset];
+				outputDirty = cacheDirty[set][hitPos];
+		    }//hit. If there is a hit , transfer data and tag to where it hit
+
+
+		    std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		}
 
 
