@@ -1,46 +1,46 @@
-C7 0 1
-E4 0 1
+C7 1 1
+E4 1 1
 banana
 banana
-43 0 1
-22 0 1
+43 1 1
+22 1 1
 banana
 banana
-6E 0 0
-3B 0 0
+6E 1 0
+3B 1 0
 banana
-5A 0 1
+5A 1 1
 banana
-20 0 1
+20 1 1
 banana
 banana
 banana
 banana
 banana
-3A 0 1
-EF 0 1
+3A 1 1
+EF 1 1
 banana
 banana
-EF 0 1
-E4 0 1
+EF 1 1
+E4 1 1
 banana
-5B 0 1
+5B 1 1
 banana
 banana
-51 0 1
+51 1 1
 banana
 banana
-C7 0 1
+C7 1 1
 banana
 banana
-D3 0 1
+D3 1 1
 banana
 banana
 banana
 banana
 banana
 banana
-C7 0 0
+C7 1 0
 banana
 banana
 banana
@@ -48,7 +48,7 @@ banana
 banana
 banana
 banana
-90 0 1
+90 1 1
 banana
 banana
 banana
@@ -58,7 +58,7 @@ banana
 banana
 banana
 banana
-B2 0 1
+B2 1 1
 banana
 banana
 banana
@@ -67,12 +67,12 @@ banana
 banana
 banana
 banana
-6C 0 0
-6C 0 0
+6C 1 0
+6C 1 0
 banana
 banana
-F8 0 0
-8D 0 1
+F8 1 0
+8D 1 1
 banana
 banana
 banana
@@ -85,54 +85,54 @@ banana
 banana
 banana
 banana
-FB 0 1
+FB 1 1
 banana
 banana
 banana
 banana
-4E 0 0
+4E 1 0
 banana
-8D 0 1
+8D 1 1
 banana
 banana
 banana
 banana
-3F 0 0
-FB 0 0
+3F 1 0
+FB 1 0
 banana
 banana
-F4 0 1
+F4 1 1
 banana
 banana
 banana
 banana
 banana
-A0 0 1
+A0 1 1
 banana
-FB 0 1
-5B 0 1
-3E 0 1
+FB 1 1
+5B 1 1
+3E 1 1
 banana
-B7 0 1
+B7 1 1
 banana
 banana
 banana
 banana
 banana
-91 0 1
+91 1 1
 banana
 banana
-C3 0 1
+C3 1 1
 banana
 banana
-68 0 1
-0E 0 1
+68 1 1
+0E 1 1
 banana
-44 0 0
-3E 0 1
-44 0 0
+44 1 0
+3E 1 1
+44 1 0
 banana
-91 0 1
+91 1 1
 banana
 banana
 banana
@@ -142,39 +142,39 @@ banana
 banana
 banana
 banana
-C8 0 1
+C8 1 1
 banana
 banana
-5B 0 1
+5B 1 1
 banana
 banana
 banana
 banana
-7A 0 1
+7A 1 1
 banana
 banana
 banana
 banana
 banana
-C8 0 1
+C8 1 1
 banana
-4B 0 1
+4B 1 1
 banana
-61 0 1
+61 1 1
 banana
 banana
 banana
 banana
 banana
 banana
-B2 0 1
+B2 1 1
 banana
 banana
-BA 0 1
+BA 1 1
 banana
 banana
 banana
-C5 0 1
+C5 1 1
 banana
 banana
 banana
@@ -184,28 +184,28 @@ banana
 banana
 banana
 banana
-82 0 1
+82 1 1
 banana
 banana
 banana
 banana
-F2 0 0
+F2 1 0
 banana
 banana
 banana
 banana
-A1 0 1
+A1 1 1
 banana
 banana
-C8 0 0
+C8 1 0
 banana
 banana
-E0 0 1
-76 0 1
+E0 1 1
+76 1 1
 banana
 banana
 banana
-7A 0 1
+7A 1 1
 banana
 banana
 banana
@@ -213,20 +213,20 @@ banana
 banana
 banana
 banana
-21 0 1
+21 1 1
 banana
 banana
 banana
 banana
-C7 0 0
-38 0 1
-93 0 1
+C7 1 0
+38 1 1
+93 1 1
 banana
 banana
 banana
-7D 0 0
+7D 1 0
 banana
-42 0 1
+42 1 1
 banana
 banana
 banana

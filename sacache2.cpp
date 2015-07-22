@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
 			if(tempHit == 1 ){
 				outputData = cacheData[set][hitPos][offset];
 				outputDirty = cacheDirty[set][hitPos];
+				outputHit = tempHit;
 				std::cout << outputData << " " << outputHit << " " << outputDirty << std::endl;
 		    }//hit. If there is a hit , transfer data and tag to where it hit
 		    if(tempHit == 0){
@@ -158,17 +159,21 @@ int main(int argc, char *argv[])
 			    		for(int j = 0; j < 4; j++)
 							memory[cacheTag[set][i] << 4  | set ][i][j] = cacheData[set][i][j];
 						memoryTag[set][i] = cacheTag[set][i];
+						outputDirty = cacheDirty[set][i];
 						
 			    	}//if its dirty transfer data from cache to memory. Then write data to that offset and set. Then Initialiate LRU counter 
 			    	else{
 			    		for(int j = 0; j < 4; j++)
 							cacheData[set][i][j] = memory[cacheTag[set][i] << 4  | set ][i][j];
 						cacheTag[set][i] = memoryTag[set][i];
+						outputDirty = cacheDirty[set][i];
+						cacheDirty[set][i] = 1;
+
 			    	}//if clean write from memory to cache
 		    	}//for every line in set
 
 
-
+		    	std::cout << "banana" << std::endl;
 		    	
  
 

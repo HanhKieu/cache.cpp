@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 
 	    }//for each line in set
 
-			std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
+			//std::cout << outputData << " " << outputHit << " " << outputDirty << " fsaf" << std::endl;
 
 			
 	  
